@@ -1,14 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
 const app = express();
+
+// keeps database credentials hidden
+const dotenv = require('dotenv');
+dotenv.config();
+var url = process.env.MONGOLAB_URI;
+
+var db;
+
+MongoClient.connect(url, function(err, client) {
+  if(err) return console.log(err);
+
+  db = client.db('massdrop');
+
+  // only start server if it is connected to database
+  app.listen(3000, function() {
+    console.log("listening to port 3000");
+  });
+
+});
 
 // tells body parser to extract data from form element and adds them
 // to the body property of the request object
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.listen(3000, function() {
-  console.log("listening to port 3000");
-});
 
 
 // can use this to get the url they send in
@@ -18,5 +35,12 @@ app.get('/', function(req, res) {
 });
 
 app.post('/todo', function(req, res) {
-  console.log(req.body);
+  db.collection('jobs').save(req.body, function(err, result) {
+    if(err) return console.log(err);
+
+    console.log("successfully saved to db");
+
+    // redirects user back to root after done posting to db
+    res.redirect('/');
+  });
 });
