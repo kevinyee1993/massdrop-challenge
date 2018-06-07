@@ -40,7 +40,19 @@ app.get('/', function(req, res) {
 
 app.get('/id', function(req, res) {
   let jobId = req.query.id;
-  console.log(req.query.id);
+  var ObjectId = require('mongodb').ObjectID;
+
+  db.collection('jobs').findOne({_id: ObjectId(req.query.id)}, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(result);
+      // res.render('client.ejs', {client: result})
+    }
+  });
+
+  // let ass = db.collection('jobs').findOne({ "_id": new ObjectId(jobId) });
+  // console.log(ass.name);
 });
 
 app.post('/job', function(req, res) {
