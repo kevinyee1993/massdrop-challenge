@@ -32,9 +32,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', function(req, res) {
   // res.send('This is a get request');
   res.sendFile(__dirname + '/index.html');
+  // var cursor = db.collection('jobs').find().toArray(function(err, results) {
+    // console.log(results[0].name);
+  // });
 });
 
-app.post('/todo', function(req, res) {
+
+app.get('/id', function(req, res) {
+  let jobId = req.query.id;
+  console.log(req.query.id);
+});
+
+app.post('/job', function(req, res) {
   db.collection('jobs').save(req.body, function(err, result) {
     if(err) return console.log(err);
 
@@ -44,3 +53,11 @@ app.post('/todo', function(req, res) {
     res.redirect('/');
   });
 });
+
+/*
+<form class="" action="/todo" method="post">
+  <input type="text" name="name">
+  <input type="text" name="priority">
+  <button type="submit">Submit</button>
+</form>
+*/
