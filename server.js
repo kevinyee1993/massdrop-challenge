@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
 
+
 // keeps database credentials hidden
 const dotenv = require('dotenv');
 dotenv.config();
@@ -46,14 +47,19 @@ app.get('/id', function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      console.log(result);
+      console.log(result.name);
+
       // res.render('client.ejs', {client: result})
     }
   });
 
+  res.redirect('/');
+
   // let ass = db.collection('jobs').findOne({ "_id": new ObjectId(jobId) });
   // console.log(ass.name);
 });
+
+
 
 app.post('/job', function(req, res) {
   db.collection('jobs').save(req.body, function(err, result) {
